@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { computeEligibility } from '../data/schemes'
+import { computeEligibility, categories } from '../data/schemes'
 import type { Screen, SchemeResult, EligibilityStatus } from '../data/schemes'
 
 type Props = {
@@ -17,7 +17,7 @@ const STATUS_CONFIG = {
 
 function SchemeCard({ result, expanded, onToggle }: { result: SchemeResult; expanded: boolean; onToggle: () => void }) {
   const cfg = STATUS_CONFIG[result.status]
-  const cat = result.category
+  const cat = categories.find(c => c.id === result.category)
 
   return (
     <div className={`bg-white rounded-2xl border ${expanded ? 'border-navy/20 shadow-md' : 'border-border'} scheme-card overflow-hidden`}>
@@ -26,11 +26,12 @@ function SchemeCard({ result, expanded, onToggle }: { result: SchemeResult; expa
         className="w-full flex items-start gap-4 p-5 text-left"
         onClick={onToggle}
       >
-        <img
-          src={`https://images.unsplash.com/photo-${result.imgSeed}?w=80&h=80&fit=crop&auto=format`}
-          alt={result.name}
-          className="w-14 h-14 rounded-xl object-cover flex-shrink-0 bg-slate-100"
-        />
+        <div
+          className="w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center text-2xl"
+          style={{ backgroundColor: cat?.bg ?? '#F1F5F9' }}
+        >
+          {cat?.icon ?? '📋'}
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3">
             <div>

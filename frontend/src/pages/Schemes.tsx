@@ -102,8 +102,6 @@ export default function Schemes({ setScreen }: Props) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map(scheme => {
               const cat = categories.find(c => c.id === scheme.category)
-              // imgSeed is pre-computed per category in schemes.ts
-              const imgSeed = `photo-${scheme.imgSeed}`
               const isCompared = compareIds.includes(scheme.id)
 
               return (
@@ -113,22 +111,16 @@ export default function Schemes({ setScreen }: Props) {
                     isCompared ? 'border-navy/30 ring-2 ring-navy/10' : 'border-border'
                   }`}
                 >
-                  <div className="relative">
-                    <img
-                      src={`https://images.unsplash.com/${imgSeed}?w=600&h=220&fit=crop&auto=format`}
-                      alt={scheme.name}
-                      className="w-full h-36 object-cover bg-slate-100"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    {cat && (
+                  {cat && (
+                    <div className="px-4 pt-4">
                       <span
-                        className="absolute top-3 left-3 text-white text-[10px] font-bold px-2.5 py-1 rounded-full"
-                        style={{ backgroundColor: cat.color }}
+                        className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full"
+                        style={{ backgroundColor: cat.bg, color: cat.color }}
                       >
                         {cat.icon} {cat.name}
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   <div className="p-4 flex-1 flex flex-col">
                     <div className="flex-1">
