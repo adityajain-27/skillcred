@@ -1,9 +1,10 @@
 fastapi
 uvicorn[standard]
 pydantic
-scikit-learn
+sentence-transformers
+faiss-cpu
 pandas
-groq
+google-genai
 python-dotenv
 pytest
 requests

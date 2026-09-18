@@ -10,14 +10,35 @@
       "gender": "all",
       "min_income": null,
       "max_income": null,
-      "category": ["general", "obc", "sc", "st"],
-      "occupation": ["farmer"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
+      "occupation": [
+        "farmer"
+      ],
       "states": "all"
     },
     "benefits": "Rs.6000 per year in 3 installments of Rs.2000",
-    "documents_required": ["Aadhaar Card", "Land Ownership Records", "Bank Account Passbook"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Land Ownership Records",
+      "Bank Account Passbook"
+    ],
     "evidence_text": "All landholding farmer families, having cultivable landholding in their names, are eligible to avail of the benefits under the scheme.",
-    "source": {"title": "PM-KISAN Scheme Guidelines", "url": "https://pmkisan.gov.in"}
+    "source": {
+      "title": "PM-KISAN Scheme Guidelines",
+      "url": "https://pmkisan.gov.in"
+    },
+    "category": "agriculture",
+    "tags": [
+      "farmer",
+      "rural",
+      "income support",
+      "cash transfer"
+    ]
   },
   {
     "scheme_id": "ayushman-bharat-pmjay",
@@ -30,14 +51,32 @@
       "gender": "all",
       "min_income": null,
       "max_income": 100000,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Rs.5 lakh per family per year for hospitalization",
-    "documents_required": ["Aadhaar Card", "Ration Card", "Income Certificate"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Ration Card",
+      "Income Certificate"
+    ],
     "evidence_text": "Households identified based on deprivation criteria in the SECC database, with annual family income up to Rs. 1,00,000, are entitled to coverage under the scheme.",
-    "source": {"title": "Ayushman Bharat PM-JAY Guidelines", "url": "https://pmjay.gov.in"}
+    "source": {
+      "title": "Ayushman Bharat PM-JAY Guidelines",
+      "url": "https://pmjay.gov.in"
+    },
+    "category": "health",
+    "tags": [
+      "health",
+      "insurance",
+      "hospitalization"
+    ]
   },
   {
     "scheme_id": "national-scholarship-portal",
@@ -50,14 +89,35 @@
       "gender": "all",
       "min_income": null,
       "max_income": 250000,
-      "category": ["sc", "st", "obc", "minority"],
-      "occupation": ["student"],
+      "category": [
+        "sc",
+        "st",
+        "obc",
+        "minority"
+      ],
+      "occupation": [
+        "student"
+      ],
       "states": "all"
     },
     "benefits": "Scholarships ranging from Rs.1000 to Rs.20000 per year",
-    "documents_required": ["Aadhaar Card", "Income Certificate", "Caste Certificate", "Previous Year Marksheet"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Income Certificate",
+      "Caste Certificate",
+      "Previous Year Marksheet"
+    ],
     "evidence_text": "Students belonging to SC/ST/OBC/Minority categories with family annual income not exceeding Rs. 2,50,000 are eligible to apply for scholarships under this scheme.",
-    "source": {"title": "National Scholarship Portal Guidelines", "url": "https://scholarships.gov.in"}
+    "source": {
+      "title": "National Scholarship Portal Guidelines",
+      "url": "https://scholarships.gov.in"
+    },
+    "category": "education",
+    "tags": [
+      "scholarship",
+      "student",
+      "sc/st/obc"
+    ]
   },
   {
     "scheme_id": "atal-pension-yojana",
@@ -70,14 +130,34 @@
       "gender": "all",
       "min_income": null,
       "max_income": null,
-      "category": ["general", "obc", "sc", "st"],
-      "occupation": ["unorganized sector"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
+      "occupation": [
+        "unorganized sector"
+      ],
       "states": "all"
     },
     "benefits": "Guaranteed pension of Rs.1000 to Rs.5000 per month after age 60",
-    "documents_required": ["Aadhaar Card", "Bank Account Details", "Mobile Number"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Bank Account Details",
+      "Mobile Number"
+    ],
     "evidence_text": "Any citizen of India between the age of 18-40 years, having a savings bank account, can join the scheme.",
-    "source": {"title": "Atal Pension Yojana Guidelines", "url": "https://npscra.nsdl.co.in"}
+    "source": {
+      "title": "Atal Pension Yojana Guidelines",
+      "url": "https://npscra.nsdl.co.in"
+    },
+    "category": "financial",
+    "tags": [
+      "pension",
+      "unorganized sector",
+      "savings"
+    ]
   },
   {
     "scheme_id": "pm-ujjwala-yojana",
@@ -90,14 +170,33 @@
       "gender": "female",
       "min_income": null,
       "max_income": 100000,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Free LPG connection with first refill and stove",
-    "documents_required": ["Aadhaar Card", "BPL Ration Card", "Bank Account Passbook"],
+    "documents_required": [
+      "Aadhaar Card",
+      "BPL Ration Card",
+      "Bank Account Passbook"
+    ],
     "evidence_text": "Adult women belonging to a below poverty line (BPL) household, not already having an LPG connection in the household, are eligible for a free connection.",
-    "source": {"title": "PM Ujjwala Yojana Guidelines", "url": "https://pmuy.gov.in"}
+    "source": {
+      "title": "PM Ujjwala Yojana Guidelines",
+      "url": "https://pmuy.gov.in"
+    },
+    "category": "women",
+    "tags": [
+      "lpg",
+      "women",
+      "bpl",
+      "cooking fuel"
+    ]
   },
   {
     "scheme_id": "pm-jeevan-jyoti-bima-yojana",
@@ -110,14 +209,30 @@
       "gender": "all",
       "min_income": null,
       "max_income": null,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Rs.2 lakh life cover at Rs.436/year premium",
-    "documents_required": ["Aadhaar Card", "Bank Account Details"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Bank Account Details"
+    ],
     "evidence_text": "Individuals aged between 18 and 50 years, having a savings bank account and giving consent for auto-debit, are eligible to join the scheme.",
-    "source": {"title": "Pradhan Mantri Jeevan Jyoti Bima Yojana Guidelines", "url": "https://jansuraksha.gov.in"}
+    "source": {
+      "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana Guidelines",
+      "url": "https://jansuraksha.gov.in"
+    },
+    "category": "financial",
+    "tags": [
+      "life insurance",
+      "low premium"
+    ]
   },
   {
     "scheme_id": "pm-suraksha-bima-yojana",
@@ -130,14 +245,30 @@
       "gender": "all",
       "min_income": null,
       "max_income": null,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Rs.2 lakh accidental death cover at Rs.20/year",
-    "documents_required": ["Aadhaar Card", "Bank Account Details"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Bank Account Details"
+    ],
     "evidence_text": "Individuals aged between 18 and 70 years with a bank account are eligible to join, subject to auto-debit consent for premium payment.",
-    "source": {"title": "Pradhan Mantri Suraksha Bima Yojana Guidelines", "url": "https://jansuraksha.gov.in"}
+    "source": {
+      "title": "Pradhan Mantri Suraksha Bima Yojana Guidelines",
+      "url": "https://jansuraksha.gov.in"
+    },
+    "category": "financial",
+    "tags": [
+      "accident insurance",
+      "low premium"
+    ]
   },
   {
     "scheme_id": "mgnrega",
@@ -150,14 +281,32 @@
       "gender": "all",
       "min_income": null,
       "max_income": null,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "100 days guaranteed wage employment per year",
-    "documents_required": ["Aadhaar Card", "Job Card", "Bank Account Details"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Job Card",
+      "Bank Account Details"
+    ],
     "evidence_text": "Adult members of a rural household willing to do unskilled manual work are entitled to apply for a job card and demand employment under the Act.",
-    "source": {"title": "MGNREGA Scheme Guidelines", "url": "https://nrega.nic.in"}
+    "source": {
+      "title": "MGNREGA Scheme Guidelines",
+      "url": "https://nrega.nic.in"
+    },
+    "category": "employment",
+    "tags": [
+      "rural employment",
+      "wage",
+      "job guarantee"
+    ]
   },
   {
     "scheme_id": "pm-matru-vandana-yojana",
@@ -170,14 +319,32 @@
       "gender": "female",
       "min_income": null,
       "max_income": null,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Rs.5000 cash incentive for first live birth in 3 installments",
-    "documents_required": ["Aadhaar Card", "Bank Account Details", "Pregnancy Certificate from Health Facility"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Bank Account Details",
+      "Pregnancy Certificate from Health Facility"
+    ],
     "evidence_text": "Pregnant and lactating women, aged 19 years and above, are eligible for cash incentive for their first live birth.",
-    "source": {"title": "PM Matru Vandana Yojana Guidelines", "url": "https://pmmvy.wcd.gov.in"}
+    "source": {
+      "title": "PM Matru Vandana Yojana Guidelines",
+      "url": "https://pmmvy.wcd.gov.in"
+    },
+    "category": "women",
+    "tags": [
+      "maternity benefit",
+      "pregnancy",
+      "cash incentive"
+    ]
   },
   {
     "scheme_id": "indira-gandhi-national-old-age-pension",
@@ -190,14 +357,32 @@
       "gender": "all",
       "min_income": null,
       "max_income": 100000,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Rs.200-500 per month pension for BPL elderly",
-    "documents_required": ["Aadhaar Card", "BPL Ration Card", "Age Proof"],
+    "documents_required": [
+      "Aadhaar Card",
+      "BPL Ration Card",
+      "Age Proof"
+    ],
     "evidence_text": "Persons aged 60 years or above and belonging to a household living below the poverty line are entitled to a monthly pension under the scheme.",
-    "source": {"title": "Indira Gandhi National Old Age Pension Scheme Guidelines", "url": "https://nsap.nic.in"}
+    "source": {
+      "title": "Indira Gandhi National Old Age Pension Scheme Guidelines",
+      "url": "https://nsap.nic.in"
+    },
+    "category": "elderly",
+    "tags": [
+      "pension",
+      "senior citizens",
+      "bpl"
+    ]
   },
   {
     "scheme_id": "disability-pension-scheme",
@@ -210,14 +395,32 @@
       "gender": "all",
       "min_income": null,
       "max_income": 100000,
-      "category": ["general", "obc", "sc", "st"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
       "occupation": [],
       "states": "all"
     },
     "benefits": "Rs.300-500 per month pension for disabled BPL persons",
-    "documents_required": ["Aadhaar Card", "Disability Certificate", "BPL Ration Card"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Disability Certificate",
+      "BPL Ration Card"
+    ],
     "evidence_text": "Persons with 80% or more disability, aged 18 years or above and belonging to a below poverty line household, are entitled to a monthly pension.",
-    "source": {"title": "Disability Pension Scheme Guidelines", "url": "https://nsap.nic.in"}
+    "source": {
+      "title": "Disability Pension Scheme Guidelines",
+      "url": "https://nsap.nic.in"
+    },
+    "category": "disability",
+    "tags": [
+      "pension",
+      "disability",
+      "bpl"
+    ]
   },
   {
     "scheme_id": "aicte-pragati-scholarship",
@@ -230,13 +433,34 @@
       "gender": "female",
       "min_income": null,
       "max_income": 800000,
-      "category": ["general", "obc", "sc", "st"],
-      "occupation": ["student"],
+      "category": [
+        "general",
+        "obc",
+        "sc",
+        "st"
+      ],
+      "occupation": [
+        "student"
+      ],
       "states": "all"
     },
     "benefits": "Rs.50000 per year scholarship for tuition and incidental charges",
-    "documents_required": ["Aadhaar Card", "Income Certificate", "Admission/Enrollment Proof", "Bank Account Details"],
+    "documents_required": [
+      "Aadhaar Card",
+      "Income Certificate",
+      "Admission/Enrollment Proof",
+      "Bank Account Details"
+    ],
     "evidence_text": "Girl students admitted to first year of a technical diploma or degree course in an AICTE approved institution, with family income not exceeding Rs. 8,00,000 per annum, are eligible.",
-    "source": {"title": "AICTE Pragati Scholarship Guidelines", "url": "https://www.aicte-india.org"}
+    "source": {
+      "title": "AICTE Pragati Scholarship Guidelines",
+      "url": "https://www.aicte-india.org"
+    },
+    "category": "education",
+    "tags": [
+      "scholarship",
+      "girl students",
+      "technical education"
+    ]
   }
 ]

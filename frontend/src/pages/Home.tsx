@@ -1,7 +1,6 @@
-import type { Screen } from '../data/schemes'
-import { categories } from '../data/schemes'
+import type { Screen, Category } from '../data/schemes'
 
-type Props = { setScreen: (s: Screen) => void }
+type Props = { setScreen: (s: Screen) => void; categories: Category[] }
 
 const PARLIAMENT_IMG = 'https://images.unsplash.com/photo-1760872645513-63b6846ce3c9?w=900&h=650&fit=crop&auto=format'
 const PEOPLE_IMG = 'https://images.unsplash.com/flagged/photo-1577604981316-298e453a19dd?w=600&h=450&fit=crop&auto=format'
@@ -51,7 +50,7 @@ const pillars = [
   { icon: '🌏', title: 'Built for every citizen', sub: 'Across states, languages, backgrounds' },
 ]
 
-export default function Home({ setScreen }: Props) {
+export default function Home({ setScreen, categories }: Props) {
   return (
     <div className="page-enter">
       {/* ── Hero ──────────────────────────────────────────────────── */}

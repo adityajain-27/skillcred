@@ -8,7 +8,15 @@ router = APIRouter(prefix="/api", tags=["schemes"])
 @router.get("/schemes")
 def list_schemes():
     return [
-        {"scheme_id": s["scheme_id"], "name": s["name"], "ministry": s["ministry"], "description": s["description"]}
+        {
+            "scheme_id": s["scheme_id"],
+            "name": s["name"],
+            "ministry": s["ministry"],
+            "description": s["description"],
+            "category": s["category"],
+            "tags": s["tags"],
+            "benefits": s["benefits"],
+        }
         for s in load_schemes()
     ]
 

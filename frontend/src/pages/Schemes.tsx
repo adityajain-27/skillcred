@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react'
-import { schemes, categories } from '../data/schemes'
-import type { Screen } from '../data/schemes'
+import type { Screen, Scheme, Category } from '../data/schemes'
 
-type Props = { setScreen: (s: Screen) => void }
+type Props = { setScreen: (s: Screen) => void; schemes: Scheme[]; categories: Category[] }
 
-export default function Schemes({ setScreen }: Props) {
+export default function Schemes({ setScreen, schemes, categories }: Props) {
   const [activeCategory, setActiveCategory] = useState('all')
   const [query, setQuery] = useState('')
   const [compareIds, setCompareIds] = useState<string[]>([])

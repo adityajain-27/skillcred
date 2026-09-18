@@ -43,6 +43,12 @@ class Explanation(BaseModel):
 class SchemeResult(BaseModel):
     scheme_id: str
     scheme_name: str
+    ministry: str
+    description: str
+    category: str
+    tags: list[str]
+    benefits: str
+    source_url: str
     status: OverallStatus
     criteria: list[Criterion]
     documents: list[str]

@@ -1,13 +1,11 @@
 // ---------------------------------------------------------------------------
-// schemes.ts – Single source of truth for scheme data.
-//
-// Currently the data is loaded from the local `schemes.json` file (same shape
-// as the backend will return).  When you connect to the backend, replace the
-// `rawSchemes` import below with an API call that returns the same JSON array,
-// then pass the result into `mapApiSchemes()` + `deriveCategoriesFromSchemes()`.
+// schemes.ts – UI-facing shapes and mappers over the real backend API (see
+// ../api.ts). The backend's rule engine is the only thing that decides
+// eligibility; everything here just maps its response into shapes the
+// components already expect.
 // ---------------------------------------------------------------------------
 
-import rawSchemes from '../../schemes.json'
+import type { SchemeSummary, SchemeResult as ApiSchemeResult, ProfileInput, OverallStatus } from '../api'
 
 // ─── Public types ────────────────────────────────────────────────────────────
 
@@ -22,42 +20,18 @@ export type Category = {
   icon: string
 }
 
-/** Shape of a single object in schemes.json (mirrors the backend response) */
-export type ApiScheme = {
-  title: string
-  slug: string
-  description: string
-  category: string
-  tags: string[]
-  eligibility: {
-    min_age: number | null
-    max_age: number | null
-    gender: 'all' | 'male' | 'female'
-    income_limit: number | null
-    caste: string[]
-    occupation: string[]
-    state: string
-  }
-  benefits: string
-  application_url: string
-  ministry: string
-  launched_year: number
-  is_active: boolean
-}
-
 /** Internal shape used by the UI components */
 export type Scheme = {
-  id: string           // = slug
-  name: string         // = title
-  shortName: string    // abbreviation derived from title initials
+  id: string           // = scheme_id
+  name: string
+  shortName: string    // abbreviation derived from name initials
   ministry: string
   description: string
   category: string
   benefits: string
   tags: string[]
-  imgSeed: string      // Unsplash photo seed (per-category fallback)
+  imgSeed: string       // Unsplash photo seed (per-category fallback)
   applicationUrl: string
-  eligibility: ApiScheme['eligibility']
 }
 
 export type EligibilityStatus = 'eligible' | 'partial' | 'not-eligible'
@@ -65,6 +39,10 @@ export type EligibilityStatus = 'eligible' | 'partial' | 'not-eligible'
 export type SchemeResult = Scheme & {
   status: EligibilityStatus
   reason: string
+  criteria: ApiSchemeResult['criteria']
+  evidence: ApiSchemeResult['evidence']
+  documents: string[]
+  explanation: ApiSchemeResult['explanation']
   missingInfo?: string[]
 }
 
@@ -99,39 +77,76 @@ const CATEGORY_IMG_SEEDS: Record<string, string> = {
 
 // ─── Mapper helpers ───────────────────────────────────────────────────────────
 
-function deriveShortName(title: string): string {
-  const initials = title
+function deriveShortName(name: string): string {
+  const initials = name
     .split(/\s+/)
     .filter(w => /^[A-Z]/.test(w))
     .map(w => w[0])
     .join('')
-  return initials.length >= 2 ? initials.slice(0, 6) : title.slice(0, 8).toUpperCase()
+  return initials.length >= 2 ? initials.slice(0, 6) : name.slice(0, 8).toUpperCase()
 }
 
-function mapApiScheme(api: ApiScheme): Scheme {
+function imgSeedFor(category: string): string {
+  return CATEGORY_IMG_SEEDS[category] ?? '1500206279733-bf2e2244c36a'
+}
+
+export function mapSchemeSummary(s: SchemeSummary): Scheme {
   return {
-    id: api.slug,
-    name: api.title,
-    shortName: deriveShortName(api.title),
-    ministry: api.ministry,
-    description: api.description,
-    category: api.category,
-    benefits: api.benefits,
-    tags: api.tags,
-    imgSeed: CATEGORY_IMG_SEEDS[api.category] ?? '1500206279733-bf2e2244c36a',
-    applicationUrl: api.application_url,
-    eligibility: api.eligibility,
+    id: s.scheme_id,
+    name: s.name,
+    shortName: deriveShortName(s.name),
+    ministry: s.ministry,
+    description: s.description,
+    category: s.category,
+    benefits: s.benefits,
+    tags: s.tags,
+    imgSeed: imgSeedFor(s.category),
+    applicationUrl: '',
   }
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
+const STATUS_MAP: Record<OverallStatus, EligibilityStatus> = {
+  POTENTIALLY_ELIGIBLE: 'eligible',
+  NOT_ELIGIBLE: 'not-eligible',
+  NEEDS_MORE_INFORMATION: 'partial',
+}
 
-/**
- * Map raw API/JSON array → internal Scheme array.
- * Swap the import above with your backend response and call this function.
- */
-export function mapApiSchemes(apiData: ApiScheme[]): Scheme[] {
-  return apiData.filter(s => s.is_active).map(mapApiScheme)
+export function mapEligibilityResult(r: ApiSchemeResult): SchemeResult {
+  const missingInfo = r.criteria
+    .filter(c => c.status === 'MISSING' || c.status === 'UNVERIFIABLE')
+    .map(c => `${c.criterion} information required`)
+
+  const failed = r.criteria.find(c => c.status === 'FAIL')
+  const status = STATUS_MAP[r.status]
+
+  let reason: string
+  if (status === 'not-eligible' && failed) {
+    reason = `${failed.criterion} criterion not met — required ${failed.required}, you provided ${failed.provided ?? 'nothing'}.`
+  } else if (status === 'partial') {
+    reason = 'Most criteria matched but some information is missing or unverified.'
+  } else {
+    reason = 'All checked criteria matched your profile. You appear to qualify for this scheme.'
+  }
+
+  return {
+    id: r.scheme_id,
+    name: r.scheme_name,
+    shortName: deriveShortName(r.scheme_name),
+    ministry: r.ministry,
+    description: r.description,
+    category: r.category,
+    benefits: r.benefits,
+    tags: r.tags,
+    imgSeed: imgSeedFor(r.category),
+    applicationUrl: r.source_url,
+    status,
+    reason,
+    criteria: r.criteria,
+    evidence: r.evidence,
+    documents: r.documents,
+    explanation: r.explanation,
+    ...(missingInfo.length > 0 ? { missingInfo } : {}),
+  }
 }
 
 /**
@@ -155,154 +170,47 @@ export function deriveCategoriesFromSchemes(schemeList: Scheme[]): Category[] {
     .sort((a, b) => b.count - a.count)
 }
 
-// ─── Active data (auto-populated from schemes.json) ───────────────────────────
+// ─── Form → API profile mapping ───────────────────────────────────────────────
 
-export const schemes: Scheme[] = mapApiSchemes(rawSchemes as ApiScheme[])
-
-export const categories: Category[] = deriveCategoriesFromSchemes(schemes)
-
-// ─── Eligibility engine ───────────────────────────────────────────────────────
-
-function parseIncomeFromLabel(label: string): number | null {
-  if (!label) return null
-  if (label.includes('Below')) return 100000
-  if (label.includes('1,00,000') && label.includes('2,00,000')) return 200000
-  if (label.includes('2,00,000') && label.includes('5,00,000')) return 500000
-  if (label.includes('5,00,000') && label.includes('10,00,000')) return 1000000
-  if (label.includes('Above')) return 9999999
-  return null
+/** Representative numeric income for each dropdown range label shown in the form. */
+function parseIncomeFromLabel(label: string | undefined): number | undefined {
+  if (!label) return undefined
+  if (label.includes('Below')) return 90000
+  if (label.includes('1,00,000') && label.includes('2,00,000')) return 150000
+  if (label.includes('2,00,000') && label.includes('5,00,000')) return 350000
+  if (label.includes('5,00,000') && label.includes('10,00,000')) return 750000
+  if (label.includes('Above')) return 1200000
+  return undefined
 }
 
-function occupationMatches(formOccupation: string, schemeOccupations: string[]): boolean {
-  if (!schemeOccupations || schemeOccupations.length === 0) return true
-  const occ = formOccupation.toLowerCase()
-  return schemeOccupations.some(so => {
-    const s = so.toLowerCase()
-    if (occ.includes('farmer') && (s.includes('farmer') || s === 'agriculture')) return true
-    if (occ.includes('student') && s.includes('student')) return true
-    if ((occ.includes('self') || occ.includes('business')) &&
-        (s.includes('business') || s.includes('self') || s.includes('entrepreneur') || s.includes('trader'))) return true
-    if ((occ.includes('daily') || occ.includes('unorganis')) && s.includes('unorganized')) return true
-    if (occ.includes('artisan') && (s.includes('artisan') || s.includes('craftsman'))) return true
-    if (occ.includes('vendor') && s.includes('vendor')) return true
-    if (occ.includes('employ') && s.includes('employ')) return true
-    return false
-  })
+const OCCUPATION_MAP: Record<string, string> = {
+  Farmer: 'farmer',
+  Student: 'student',
+  'Self-Employed': 'self-employed',
+  'Salaried Employee': 'salaried employee',
+  'Daily Wage Worker': 'unorganized sector',
+  Unemployed: 'unemployed',
+  Retired: 'retired',
+  Other: 'other',
 }
 
-/**
- * Compute eligibility for all schemes given a user's form data.
- * Returns results sorted: eligible → partial → not-eligible.
- *
- * When the backend handles matching, replace this function call with an API
- * request and cast the response to SchemeResult[].
- */
-export function computeEligibility(
-  formData: Record<string, string>,
-  schemeList: Scheme[] = schemes,
-): SchemeResult[] {
-  const age = formData.age ? parseInt(formData.age, 10) : null
-  const income = parseIncomeFromLabel(formData.income)
-  const gender = formData.gender?.toLowerCase() ?? ''
-  const caste = formData.category?.toLowerCase() ?? ''
-  const occupation = formData.occupation ?? ''
-  const disability = formData.disabilityStatus ?? ''
-
-  const results: SchemeResult[] = schemeList.map(scheme => {
-    const elig = scheme.eligibility
-    const missingInfo: string[] = []
-    let fails = 0
-
-    // Age
-    if (age !== null) {
-      if (elig.min_age !== null && age < elig.min_age) fails++
-      if (elig.max_age !== null && age > elig.max_age) fails++
-    } else if (elig.min_age !== null || elig.max_age !== null) {
-      missingInfo.push('Age information required')
-    }
-
-    // Income
-    if (income !== null && elig.income_limit !== null) {
-      if (income > elig.income_limit) fails++
-    } else if (income === null && elig.income_limit !== null) {
-      missingInfo.push('Income certificate required')
-    }
-
-    // Gender
-    if (elig.gender !== 'all' && gender && gender !== 'all') {
-      if (elig.gender !== gender) fails++
-    }
-
-    // Caste
-    if (elig.caste?.length > 0 && caste) {
-      const normCaste = caste.replace('prefer not to say', 'general').replace('ews', 'general')
-      if (!elig.caste.map(c => c.toLowerCase()).includes(normCaste)) {
-        missingInfo.push('Caste/category certificate may be needed')
-      }
-    }
-
-    // Occupation
-    if (elig.occupation?.length > 0) {
-      if (occupation) {
-        if (!occupationMatches(occupation, elig.occupation)) fails++
-      } else {
-        missingInfo.push('Occupation details required')
-      }
-    }
-
-    // Disability schemes
-    if (scheme.category === 'disability' && !disability.includes('Yes')) {
-      fails++
-    }
-
-    let status: EligibilityStatus
-    let reason: string
-
-    if (fails > 0) {
-      status = 'not-eligible'
-      reason = buildNotEligibleReason(scheme, age, income, gender, occupation, elig)
-    } else if (missingInfo.length > 0) {
-      status = 'partial'
-      reason = 'Most criteria matched but some information is missing or unverified.'
-    } else {
-      status = 'eligible'
-      reason = 'All checked criteria matched your profile. You appear to qualify for this scheme.'
-    }
-
-    return {
-      ...scheme,
-      status,
-      reason,
-      ...(missingInfo.length > 0 && status !== 'not-eligible' ? { missingInfo } : {}),
-    }
-  })
-
-  const order: EligibilityStatus[] = ['eligible', 'partial', 'not-eligible']
-  return results.sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status))
+const CATEGORY_MAP: Record<string, string> = {
+  General: 'general',
+  OBC: 'obc',
+  SC: 'sc',
+  ST: 'st',
+  EWS: 'general',
+  'Prefer not to say': 'general',
 }
 
-function buildNotEligibleReason(
-  scheme: Scheme,
-  age: number | null,
-  income: number | null,
-  gender: string,
-  occupation: string,
-  elig: ApiScheme['eligibility'],
-): string {
-  if (age !== null && elig.min_age !== null && age < elig.min_age)
-    return `Age criterion not met. Minimum age required is ${elig.min_age} years.`
-  if (age !== null && elig.max_age !== null && age > elig.max_age)
-    return `Age criterion not met. Maximum age for this scheme is ${elig.max_age} years.`
-  if (income !== null && elig.income_limit !== null && income > elig.income_limit)
-    return `Income exceeds the limit of ₹${elig.income_limit.toLocaleString('en-IN')} per year.`
-  if (elig.gender !== 'all' && gender !== elig.gender)
-    return `This scheme is available only to ${elig.gender} applicants.`
-  if (elig.occupation.length > 0 && occupation && !occupationMatches(occupation, elig.occupation))
-    return `Occupation does not match. This scheme is for: ${elig.occupation.join(', ')}.`
-  if (scheme.category === 'disability')
-    return 'This scheme requires a disability certificate (40%+ disability).'
-  return 'One or more eligibility criteria were not met based on your profile.'
+/** Maps the eligibility form's dropdown labels to the backend's ProfileInput shape. */
+export function formToProfile(form: Record<string, string>): ProfileInput {
+  const profile: ProfileInput = {}
+  if (form.age) profile.age = parseInt(form.age, 10)
+  if (form.state) profile.state = form.state
+  if (form.occupation) profile.occupation = OCCUPATION_MAP[form.occupation] ?? form.occupation.toLowerCase()
+  if (form.category) profile.category = CATEGORY_MAP[form.category] ?? form.category.toLowerCase()
+  const income = parseIncomeFromLabel(form.income)
+  if (income !== undefined) profile.income = income
+  return profile
 }
-
-// Kept for any legacy imports — now always empty (Results.tsx uses computeEligibility instead)
-export const eligibilityResults: SchemeResult[] = []
